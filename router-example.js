@@ -1,4 +1,4 @@
-const http = require('http');
+const http = require('fs');
 const url = require('url');
 const server = http.createServer((request, response) => {
     const { pathname } = url.parse(request.url);
