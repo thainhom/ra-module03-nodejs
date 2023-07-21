@@ -83,7 +83,9 @@ for (let student of students) {
 }
 // in thông tin gom nhóm ra mà hình cosole.log
 for (const hometown in studentsByhomeTowm) {
+
     console.log("Sinh viên từ " + hometown + ":");
+
     for (const studentInfo of studentsByhomeTowm[hometown]) {
         console.log(studentInfo);
     }
