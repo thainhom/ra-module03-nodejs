@@ -1,8 +1,8 @@
 // const express = require('express');
 import express from 'express';// phai thêm type "module"
-const application = express();
-application.use(express.json())
-application.use(express.urlencoded());
+const managaUsers = express();
+managaUsers.use(express.json())
+managaUsers.use(express.urlencoded());
 /////////////
 // GET:  Khi lấy dữ liệu
 // application.get();
@@ -16,94 +16,72 @@ application.use(express.urlencoded());
 // DELETE: Dùng khi xóa dữ liệu
 // application.delete();
 ///////////
-application.get('/', function (req, res) {
-    // dùng thuần
-    // res.writeHead(200, { 'Content-Type': 'text.html;charset=utf-8' });
-    // res.write('<h1>Hello</h1>');
-    // res.end()
-    // dùng của express
-    res.send('<h1>Hello</h1>')
+// Quản lý người dùng
+// trang chủ
+managaUsers.get("/", (rep, res) => {
+    const home = `<h1> Xin chao Admin 111 </h1>`
+    res.send(home)
 })
-
-
-
-application.get('/users', (req, res) => {
-    const users = [
-        {
-            id: 1,
-            name: "Thai"
-        },
-        {
-            id: 2,
-            name: "Sang"
-        },
-
-    ];
-    res.send(users);// đây là viết 
+// searchUsers
+managaUsers.get('/users', function (req, res) {
+    const users = [{ id: 1, name: "Thai", email: "Thai@gmail.com" }, { id: 2, name: "No", email: "No@gmail.com" }]
+    const { keyword } = req.query
+    const searchUsers = users.filter(user => {
+        return !keyword || (user.name.toLowerCase().includes(keyword.toLowerCase())
+            || user.name.toLowerCase().includes(keyword.toLowerCase()));
+    })
+    res.send(searchUsers)
 })
-// đường dẫn tương đối
-application.get('/about/*', function (req, res) {
-    res.send("Trang đường dẫn tương đối")
-})
-// ví dụ về param 
-application.get("/users/:id", function (req, res) {
-    const users = [
-        {
-            id: 1,
-            name: "Thai"
-        },
-        {
-            id: 2,
-            name: "Sang"
-        },
+// Thêm mới users
+managaUsers.get('/users/add', function (req, res) {
+    res.send(`<form action="http://localhost:8000/users" method="POST">
+    <input name="name" placeholder="Name"/>
+    <input name="email" placeholder="email"/>
+    <input name="password" placeholder="password"/>
+    <button type="submit">Add</button>
+</form>
 
-    ];
-    const id = req.params.id;
-    const user = users.find(u => u.id == id);
+    `
+    )
+})
+// dung method post
+managaUsers.post('/users', (rep, res) => {
+    res.send({
+        body: rep.body
+    });
+})
+// Cập nhập user method PUT
+managaUsers.put('users/:id', (rep, res) => {
+    const users = [{ id: 1, name: "thai", email: "Thai@gmail.com" }, { id: 2, name: "no", email: "No@gmail.com" }]
+    const id = rep.params.id
+    const { name, email, password } = rep.body
+    const user = users.pind(u => u.id == id)
     if (user) {
-        res.send(user);
+        users.name = name || users.name
+        users.email = name || users.email
+        users.password = name || users.password
+
     } else {
-        res.send({
-            error: "trang không tồn tại"
+        res.status(404).send({
+            error: "Đường dẫn không tồn tại "
         })
     }
 })
-// ví dụ : lấy query string
+/// delete users
+managaUsers.delete('users/:id', (rep, res) => {
+    const users = [{ id: 1, name: "thai", email: "Thai@gmail.com" }, { id: 2, name: "no", email: "No@gmail.com" }]
+    const id = rep.params.id
+    const usersIndex = users.findIndex(user => user.id == id)
+    if (usersIndex !== -1) {
+        const deleteUser = usersIndex.splice(usersIndex, 1)
+        res.send(deleteUser)
+    } else {
+        res.status(404).send({
+            error: 'Người dùng không tồn tại'
+        })
+    }
 
-application.get("/products", (req, res) => {
-    const products = [{ id: 1, name: "laptop" }, { id: 2, name: "iphone" }]
-    const { keyword, id } = req.query
-    const search = products.filter(product => {
-        return (keyword && product.name.toLowerCase().includes(keyword.toLowerCase()))
-            || product.id == id
-    })
-
-    res.send(
-        search
-    )
 })
-
-// Ví dụ: tạo form POST
-application.get('/products/add', (req, res) => {
-    res.send(`
-        <form action="http://localhost:8000/products" method="POST">
-            <input name="name" placeholder="Name"/>
-            <input name="description" placeholder="Description"/>
-            <input name="unit_price" placeholder="Unit price"/>
-            <button type="submit">Add</button>
-        </form>
-    `);
-});
-
-// Với method GET: Khi submit thì sẽ nhận dữ liệu payload sẽ lấy thông qua res.query
-// Với method POST: Khi submit thì sẽ nhận dữ liệu payload sẽ lấy thông qua res.body
-// Ví dụ: POST method
-application.post('/products', (req, res) => {
-    res.send({
-        body: req.body
-    });
-});
-
-application.listen(8000, () => {
+managaUsers.listen(8000, () => {
     console.log('server started');
 })
