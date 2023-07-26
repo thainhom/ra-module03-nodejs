@@ -96,9 +96,9 @@ application.put('/products/:id', (req, res) => {
         if (product.id == id) {
             updateProduct = {
                 ...product,
-                name: requestBody.name,
-                price: requestBody.price,
-                color: requestBody.color,
+                name: requestBody.name || product.name,
+                price: requestBody.price || product.price,
+                color: requestBody.color || product.color,
                 updated_at: new Date()
             }
             return updateProduct
