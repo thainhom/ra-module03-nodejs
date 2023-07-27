@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ThaiNHom</title>
+  </head>
+  <body>
+    <h1>Chỉnh sủa sản phẩm</h1>
+    <a href="/products">Trở về danh sách sản phẩm</a>
+
+    <form method="POST" action="/products/<%= product.id %>?_method=PUT">
+      <input disabled type="text" name="name" value="<%=product.name%>" />
+      <input
+        type="text"
+        name="price"
+        placeholder="edit price"
+        value="<%=product.price%>"
+      />
+      <input disabled type="text" name="color" value="<%=product.color%>" />
+
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>
