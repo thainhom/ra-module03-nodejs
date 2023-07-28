@@ -240,3 +240,8 @@
 ::1 - - [27/Jul/2023:15:16:37 +0000] "GET /products HTTP/1.1" 200 1025 "http://localhost:8000/products" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
 ::1 - - [27/Jul/2023:15:16:37 +0000] "DELETE /products/2?_method=DELETE HTTP/1.1" 302 62 "http://localhost:8000/products" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
 ::1 - - [27/Jul/2023:15:16:37 +0000] "GET /products HTTP/1.1" 200 580 "http://localhost:8000/products" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+::1 - - [28/Jul/2023:11:45:14 +0000] "GET / HTTP/1.1" 404 139 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+::1 - - [28/Jul/2023:11:45:19 +0000] "GET /products HTTP/1.1" 200 1469 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+::1 - - [28/Jul/2023:11:45:20 +0000] "GET /favicon.ico HTTP/1.1" 404 150 "http://localhost:8000/products" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+::1 - - [28/Jul/2023:11:45:35 +0000] "GET /products/1/edit HTTP/1.1" 200 705 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+::1 - - [28/Jul/2023:11:45:55 +0000] "GET /products/1/edit HTTP/1.1" 304 - "http://localhost:8000/products" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
