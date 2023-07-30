@@ -95,7 +95,7 @@ application.put('/products/:id', (req, res) => {
     products = products.map(product => {
         if (product.id == id) {
             updateProduct = {
-                ...product,
+                ...products,
                 name: requestBody.name || product.name,
                 price: requestBody.price || product.price,
                 color: requestBody.color || product.color,
@@ -127,62 +127,6 @@ application.delete('/products/:id', (req, res) => {
 
 
 
-// application.put('/products/:id', (req, res) => {
-//     const { id } = req.params;
-
-//     // Kiểm tra user với param id có tồn tại không
-//     const product = products.find(user => user.id == id);
-
-//     // Nếu không tồn tại thì trả về lỗi
-//     if (!product) {
-//         res.status(404)
-//             .send({
-//                 error: 'User not found'
-//             });
-//     }
-
-//     // Lấy request body
-//     const requestBody = req.body;
-//     let updatedProduct = null;
-
-//     users = users.map(user => {
-//         if (user.id == id) {
-//             updatedProduct = {
-//                 ...user,
-//                 first_name: requestBody.first_name,
-//                 last_name: requestBody.last_name,
-//                 password: requestBody.password ? requestBody.password : user.password,
-//                 role: requestBody.role,
-//                 updated_at: new Date()
-//             }
-//             return updatedUser;
-//         } else {
-//             return user;
-//         }
-//     });
-
-//     // Lấy lại user sau khi update
-//     // const userUpdated = users.find(user => user.id == id);
-//     res.send(updatedUser)
-// });
-
-// application.delete('/products/:id', (req, res) => {
-//     const { id } = req.params;
-
-//     // Kiểm tra user với param id có tồn tại không
-//     const user = users.find(user => user.id == id);
-
-//     // Nếu không tồn tại thì trả về lỗi
-//     if (!user) {
-//         res.status(404)
-//             .send({
-//                 error: 'User not found'
-//             });
-//     }
-
-//     users = users.filter(user => user.id != id);
-//     res.status(204).send(); // HTTP status code 204 (No Content) - thường được sử dụng để trả về sau khi xóa thành công
-// });
 
 application.listen(8000, () => {
     console.log('Server started');
