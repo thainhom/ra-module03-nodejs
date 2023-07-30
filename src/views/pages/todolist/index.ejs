@@ -12,14 +12,14 @@
     />
   </head>
   <body>
-    <h1>Danh sach lam việc hằng ngày</h1>
+    <h1>Danh sách làm việc hằng ngày !</h1>
     <form method="POST" action="/todoapps">
       <label for="">Thêm công việc</label>
       <input type="text" name="title" placeholder="nhập công việc" />
       <button type="submit">Lưu</button>
     </form>
-
-    <table>
+    <br />
+    <table border="1px">
       <thead>
         <th>completed</th>
         <th>ID</th>
@@ -41,22 +41,12 @@
           <td><%=todoapp.title %></td>
           <td>
             <form
-              method="POST"
-              action="/todoapps/<%= todoapp.id %>?_method=PUT"
-            >
-              <input
-                type="text"
-                name="title"
-                placeholder="Tên đăng nhập"
-                value="<%= todoapp.title %>"
-              />
-
-              <button type="submit">Lưu</button>
-            </form>
-            <form
               action="/todoapps/<%= todoapp.id %>?_method=DELETE"
               method="POST"
             >
+              <button class="btn btn-warning">
+                <a href="/todoapps/<%=todoapp.id%>/edit">Sửa</a>
+              </button>
               <button type="submit" class="btn btn-danger">xóa</button>
             </form>
           </td>
