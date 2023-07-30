@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bt-ToDo-App</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <h1>Danh sach lam việc hằng ngày</h1>
+    <form method="POST" action="/todoapps">
+      <label for="">Thêm công việc</label>
+      <input type="text" name="title" placeholder="nhập công việc" />
+      <button type="submit">Lưu</button>
+    </form>
+
+    <table>
+      <thead>
+        <th>completed</th>
+        <th>ID</th>
+        <th>title</th>
+      </thead>
+      <tbody>
+        <% for (let todoapp of todoapps) { %>
+        <tr>
+          <td>
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value=""
+              id="flexCheckDefault"
+            />
+          </td>
+          <td><%=todoapp.id %></td>
+
+          <td><%=todoapp.title %></td>
+          <td>
+            <form
+              method="POST"
+              action="/todoapps/<%= todoapp.id %>?_method=PUT"
+            >
+              <input
+                type="text"
+                name="title"
+                placeholder="Tên đăng nhập"
+                value="<%= todoapp.title %>"
+              />
+
+              <button type="submit">Lưu</button>
+            </form>
+            <form
+              action="/todoapps/<%= todoapp.id %>?_method=DELETE"
+              method="POST"
+            >
+              <button type="submit" class="btn btn-danger">xóa</button>
+            </form>
+          </td>
+        </tr>
+
+        <%}%>
+      </tbody>
+    </table>
+  </body>
+</html>

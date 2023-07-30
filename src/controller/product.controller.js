@@ -105,5 +105,4 @@ export default {
     viewEditProducts,
     updateProduct,
     deleteProduct
-
 }

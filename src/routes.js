@@ -1,6 +1,7 @@
 import { Router } from "express";
 import userController from "./controller/user.controller.js";
 import productController from "./controller/product.controller.js";
+import todoController from './controller/todolist.controller.js'
 const router = Router();
 
 
@@ -25,6 +26,13 @@ router.delete('/products/:id', productController.deleteProduct);
 
 // Contact management
 // todolist management
-
+router.get('/todoapps', todoController.searchtodoapps);
+router.get('/todoapps/new', todoController.viewAddtodoapps);
+router.post('/todoapps', todoController.addtodoapps);
+router.get('/todoapps/:id', todoController.getDetailtodoapps);
+router.get('/todoapps/:id/edit', todoController.viewEdittodoapps);
+router.put('/todoapps/:id', todoController.updatetodoapps);
+router.delete('/todoapps/:id', todoController.deletetodoapps);
+// Order management
 
 export default router;
