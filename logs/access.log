@@ -687,3 +687,8 @@
 ::1 - - [30/Jul/2023:14:42:16 +0000] "DELETE /todoapps/1?_method=DELETE HTTP/1.1" 302 62 "http://localhost:8000/todoapps" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
 ::1 - - [30/Jul/2023:14:42:16 +0000] "GET /todoapps HTTP/1.1" 200 951 "http://localhost:8000/todoapps" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
 ::1 - - [30/Jul/2023:14:42:18 +0000] "GET /todoapps HTTP/1.1" 304 - "http://localhost:8000/todoapps" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+::1 - - [31/Jul/2023:11:36:29 +0000] "GET /todoapps HTTP/1.1" 200 2947 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+::1 - - [31/Jul/2023:11:36:29 +0000] "GET /favicon.ico HTTP/1.1" 404 150 "http://localhost:8000/todoapps" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+::1 - - [31/Jul/2023:11:38:14 +0000] "GET /todoapps/1/edit HTTP/1.1" 304 - "http://localhost:8000/todoapps" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+::1 - - [31/Jul/2023:11:38:16 +0000] "GET /todoapps/2/edit HTTP/1.1" 304 - "http://localhost:8000/todoapps" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+::1 - - [31/Jul/2023:11:38:18 +0000] "GET /todoapps/3/edit HTTP/1.1" 304 - "http://localhost:8000/todoapps" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"

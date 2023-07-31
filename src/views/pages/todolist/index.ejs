@@ -40,13 +40,13 @@
 
           <td><%=todoapp.title %></td>
           <td>
+            <a class="btn btn-warning" href="/todoapps/<%=todoapp.id%>/edit"
+              >Sửa</a
+            >
             <form
               action="/todoapps/<%= todoapp.id %>?_method=DELETE"
               method="POST"
             >
-              <button class="btn btn-warning">
-                <a href="/todoapps/<%=todoapp.id%>/edit">Sửa</a>
-              </button>
               <button type="submit" class="btn btn-danger">xóa</button>
             </form>
           </td>
