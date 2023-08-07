@@ -5,7 +5,6 @@ import fs from 'fs';
 import router from './src/routes.js';
 import methodOverride from 'method-override';
 
-const app = express();
 
 // Cấu hình để sử dụng được method PUT/DELETE/... với HTML form
 app.use(methodOverride('_method'));
