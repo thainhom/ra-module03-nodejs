@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import fs from 'fs';
-import router from './src/routes.js';
+import router from './src/application/routes.js';
 import methodOverride from 'method-override';
 
 const app = express();
