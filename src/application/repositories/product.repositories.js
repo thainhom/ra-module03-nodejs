@@ -26,22 +26,30 @@ const addProduct = (request, response) => {
 
 }
 const getDetailProduct = (id, callback) => {
-const connection=getConnection();
-connection.query('SELECT * FROM products where id = ?',[id],(error,result)=>{
-    if(error){
-        callback( error,null)
+    const connection = getConnection();
+    connection.query('SELECT * FROM products where product_id = ?', [id], (error, result) => {
+        if (error) {
+            callback(error, null)
 
-    }else{
-        callback(null,result)
-    }
-});
-connection.end()
+        } else {
+            callback(null, result)
+        }
+    });
+    connection.end()
 }
 const updateProduct = (request, response) => {
 
 }
-const deleteProduct = (request, response) => {
-
+const deleteProduct = (id, callback) => {
+    const connection = getConnection();
+    connection.query('DELETE FROM products WHERE product_id = ?', [id], (error, result) => {
+        if (error) {
+            callback(error, null)
+        } else {
+            callback(null, result)
+        }
+    })
+    connection.end()
 }
 export default {
     searchProduct,
