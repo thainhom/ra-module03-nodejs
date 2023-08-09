@@ -1,23 +1,20 @@
-const http = require('http');
-const server = http.createServer((request, response) => {
-    const { patname, query } = url.parse(request.url, true);
-    response.writeHead(200, {
-        'Content-Type': 'text/html; charset=UTF-8',
-    });
-    let html = '';
-    html = `
-    <form action=127.0.0.1:8080 method= 'GET' >
-    <input type= 'text' name= keyword />
-    <input type= 'text' name= course />
-    <button type= 'submit'>Tìm kiếm</button>
-    </form>
-    <p> Tu Khoa:${query.keyword}</p>
-    <p>Khoa hoc:${query.course}</p>
-    `
-    response.write(html);
-    response.end();
 
+import express from 'express';
+import bodyParser from 'body-parser';
+import router from './src/application/routes.js';
+const app = express();
+
+// Cấu hình body parser
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+// parse application/json
+app.use(bodyParser.json());
+app.set('view engine', 'ejs');
+app.get('/', (request, response)=>{
+    response.render('index',{})
 })
-server.listen(8080, '127.0.0.1', () => {
-    console.log("server đang chạy trên cổng 8000, vui lòng try cập http://127.0.0.1:8080/ ");
-})  
+app.use('/', router);
+
+app.listen(8000, () => {
+    console.log('Server started');
+});
