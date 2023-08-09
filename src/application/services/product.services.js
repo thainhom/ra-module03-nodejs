@@ -1,9 +1,9 @@
 import productRepositories from "../repositories/product.repositories.js";
 
 const searchProduct = (params, callback) => {
-    if (!(/^[0-9]+$/.test(params.limit))) {
+    if (params.limit && !(/^[0-9]+$/.test(params.limit))) {
         callback({ message: 'limit phải là số' }, null)
-    } else if (!(/^[0-9]+$/.test(params.page))) {
+    } else if (params.page && !(/^[0-9]+$/.test(params.page))) {
         callback({ message: 'Page phải là số' }, null)
     } else {
         productRepositories.searchProduct(params, (error, result) => {
@@ -14,8 +14,6 @@ const searchProduct = (params, callback) => {
             }
         })
     }
-
-
 }
 const addProduct = (request, response) => {
 

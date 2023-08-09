@@ -1,9 +1,9 @@
 import userRepositories from "../repositories/user.repositories.js"
 
 const searchUsers = (params, callback) => {
-    if (!(/^[0-9]+$/.test(params.limit))) {
+    if (params.limit && !(/^[0-9]+$/.test(params.limit))) {
         callback({ message: 'Limit phải là số' }, null)
-    } else if (!(/^[0-9]+$/.test(params.page))) {
+    } else if (params.page && !(/^[0-9]+$/.test(params.page))) {
         callback({ message: 'Page phải là số' }, null)
     } else {
         userRepositories.searchUsers(params, (error, result) => {

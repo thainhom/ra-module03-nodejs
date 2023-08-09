@@ -8,11 +8,10 @@ const searchProduct = (params, callback) => {
     const offset = (page - 1) * limit;
     if (params.name) {
         const name = '%' + params.name + '%';
-        sql += 'WHERE name LIKE ?';
+        sql += ' WHERE name LIKE ?';
         bindParams.push(name)
-
     }
-    sql += `LIMIT${limit} OFFSET ${offset}`
+    sql += ` LIMIT ${limit} OFFSET ${offset}`
     connection.query(sql, bindParams, (error, result) => {
         if (error) {
             callback(error, null)
