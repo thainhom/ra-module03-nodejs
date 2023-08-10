@@ -11,15 +11,24 @@ const searchProduct = (request, response) => {
                 error: error.message,
             })
         } else {
-            response.send({
-                product: result
-            })
+            response.send(
+                result
+            )
         }
     })
 
 }
 const addProduct = (request, response) => {
-
+    const requsetBody = request.body;
+    productServices.addProduct(requsetBody, (error, result) => {
+        if (error) {
+            response.status(500).send({
+                error: error,
+            })
+        } else {
+            response.status(201).send();
+        }
+    })
 }
 const getDetailProduct = (request, response) => {
     const { id } = request.params;

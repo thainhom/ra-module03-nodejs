@@ -15,7 +15,58 @@ const searchProduct = (params, callback) => {
         })
     }
 }
-const addProduct = (request, response) => {
+const addProduct = (requestBody, callback) => {
+    const validate = (params) => {
+        let errors = Map()
+        // validate sku 
+        if (!params.sku) {
+            errors.set('msp không được bỏ trống')
+        }
+        // validate name 
+        if (!params.name) {
+            errors.set('Tên sản phẩm không được bỏ trống')
+        }
+        // validate category
+        if (!params.category) {
+            errors.set('Phân loại sản phẩm không được để trống')
+        }
+        // validate description 
+        if (!params.description) {
+            errors.set('mô tả không được để trống')
+        }
+        // validate unit_price
+        if (!params.unit_price) {
+            errors.set('giá tiền không được để trống')
+        } else if (typeof params.unit_price !== 'number') {
+            errors.set('giá tiền phải là số')
+        }
+        // validate image
+        if (!params.image) {
+            errors.set('Hinh ảnh không được để trống ')
+        }
+        return errors
+
+    }
+    const validateErrors = validate(requestBody)
+    if (validateErrors.size !== 0) {
+        callback(Object.fromEntries(validateErrors), null);
+    } else {
+        productRepositories.addProduct({
+            sku: params.sku,
+            name: params.name,
+            category: params.category,
+            description: params.description,
+            unit_price: params.unit_price,
+            image: params.image,
+
+        }, (error, result) => {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(result, null);
+            }
+        })
+    }
 
 }
 const getDetailProduct = (id, callback) => {

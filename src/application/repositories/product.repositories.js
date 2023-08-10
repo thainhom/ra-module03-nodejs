@@ -1,7 +1,7 @@
 import getConnection from "../../config/connection.database.js"
 const searchProduct = (params, callback) => {
     const connection = getConnection()
-    let sql = 'SELECT * FROM products';
+    let sql = ' FROM products';
     const bindParams = [];
     const page = params.page || 1;
     const limit = params.limit || 5
@@ -12,16 +12,49 @@ const searchProduct = (params, callback) => {
         bindParams.push(name)
     }
     sql += ` LIMIT ${limit} OFFSET ${offset}`
-    connection.query(sql, bindParams, (error, result) => {
+    connection.query('SELECT COUNT(1) AS total' + sql, bindParams, (error, countResult) => {
+        if (error) {
+            callback(error, null);
+
+        } else if (countResult[0].total !== 0) {
+            connection.query('SELECT *' + sql, bindParams, (error, result) => {
+                if (error) {
+                    callback(error, null);
+                } else {
+                    callback(null, {
+                        total: countResult[0].total,
+                        records: result
+                    })
+                }
+            })
+            connection.end();
+        } else {
+            callback(null, {
+                total: 0,
+                records: []
+            });
+            connection.end();
+        }
+    });
+
+}
+const addProduct = (product, callback) => {
+    const connection = getConnection()
+    const productTocreate = {
+        ...product,
+        created_by_id: 1, // TODO: chờ làm login
+        created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+        updated_by_id: 1, // TODO: chờ làm login
+        updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+    }
+    connection.query('INSERT INTO PRODUCTS SET ?', productTocreate, (error, result) => {
         if (error) {
             callback(error, null)
         } else {
             callback(null, result)
         }
     })
-
-}
-const addProduct = (request, response) => {
+    connection.end();
 
 }
 const getDetailProduct = (id, callback) => {
