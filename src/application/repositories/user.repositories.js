@@ -1,4 +1,6 @@
 import getConnection from "./../../config/connection.database.js"
+import { randomString } from '../../utilities/string.util.js';
+import { encryptPassword } from '../../utilities/hash.util.js';
 import moment from 'moment';
 const searchUsers = (params, callback) => {
     const connection = getConnection();
@@ -46,6 +48,7 @@ const addUser = (user, callback) => {
 
     const userToCreate = {
         ...user,
+        password: encryptPassword(user.password),
         created_by_id: 1, // TODO: chờ làm login
         created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
         updated_by_id: 1, // TODO: chờ làm login
@@ -76,6 +79,57 @@ const getDetailUser = (id, callback) => {
     connection.end();
 
 }
+const getUserByUsernameAndRole = (username, role, callback) => {
+    const connection = getConnection();
+
+    connection.query('SELECT * FROM users WHERE username = ? AND role = ?', [username, role], (error, result) => {
+        if (error) {
+            callback(error, null);
+        } else {
+            callback(null, result);
+        }
+    });
+
+    connection.end();
+}
+
+const getUserByApiKey = (apiKey, callback) => {
+    const connection = getConnection();
+
+    connection.query('SELECT * FROM users WHERE api_key = ?', [apiKey], (error, result) => {
+        if (error) {
+            callback(error, null);
+        } else {
+            callback(null, result);
+        }
+    });
+
+    connection.end();
+}
+
+const createApiKey = (userId, callback) => {
+    const connection = getConnection();
+
+    const apiKey = userId + randomString(128);
+
+    connection.query('UPDATE users SET api_key = ? WHERE user_id = ?', [apiKey, userId], (error, result) => {
+        if (error) {
+            callback(error, null);
+        } else {
+            callback(null, apiKey);
+        }
+    });
+
+    connection.end();
+}
+
+
+
+
+
+
+
+
 const updateUser = (id, updateData, callback) => {
 
     const connection = getConnection();
@@ -130,5 +184,9 @@ export default {
     addUser,
     getDetailUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    getUserByUsernameAndRole,
+    createApiKey,
+
+
 }

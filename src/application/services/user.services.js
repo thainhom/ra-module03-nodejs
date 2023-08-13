@@ -1,5 +1,5 @@
 import userRepositories from "../repositories/user.repositories.js"
-
+import { getFileExtension } from '../../utilities/upload.util.js';
 const searchUsers = (params, callback) => {
     if (params.limit && !(/^[0-9]+$/.test(params.limit))) {
         callback({ message: 'Limit phải là số' }, null)
@@ -17,6 +17,14 @@ const searchUsers = (params, callback) => {
 
 }
 const addUser = async (requestBody, callback) => {
+    let originalname = null;
+    let path = null;
+
+    if (requestBody.avatar) {
+        originalname = requestBody.avatar.originalname;
+        path = requestBody.avatar.path;
+    }
+
     const validate = (params) => {
         let errors = {};
 
@@ -69,9 +77,9 @@ const addUser = async (requestBody, callback) => {
             errors.password = 'Mật khẩu chỉ cho phép từ 8 đến 20 ký tự.'
         }
 
-        if (typeof params.role !== 'number') {
+        if (typeof params.role !== 'string') {
             errors.role = 'Vai trò phải là chuỗi.'
-        } else if (params.role !== 1 && params.role !== 2) {
+        } else if (params.role !== '1' && params.role !== '2') {
             errors.role = 'Vai trò chỉ cho phép nhập 1 hoặc 2.'
         }
 
@@ -83,14 +91,30 @@ const addUser = async (requestBody, callback) => {
     if (Object.keys(validateErrors).length !== 0) {
         callback(validateErrors, null);
     } else {
-        userRepositories.addUser({
+        let avatar = null;
+
+        if (requestBody.avatar) {
+            const avatarExtension = getFileExtension(originalname);
+            avatar = `avatar/${requestBody.username}.${avatarExtension}`;
+            const avatarLocation = `./public/${avatar}`;
+
+            // Copy upload file to saving location
+            fs.cpSync(path, avatarLocation);
+        }
+        const newUser = {
             username: requestBody.username,
             email: requestBody.email,
             first_name: requestBody.first_name,
             last_name: requestBody.last_name,
             password: requestBody.password,
             role: requestBody.role,
-        }, (error, result) => {
+            avatar: avatar
+        };
+
+        userRepositories.addUser(newUser, (error, result) => {
+            if (path) {
+                fs.rmSync(path);
+            }
             if (error) {
                 callback(error, null);
             } else {
@@ -183,7 +207,7 @@ const updateUser = (id, updateData, callback) => {
     const validateErrors = validate(updateData);
     if (Object.keys(validateErrors).length !== 0) {
         callback(validateErrors, null);
-
+        console.log(validateErrors);
     } else {
         userRepositories.updateUser(id, updateData, (error, result) => {
             if (error) {
