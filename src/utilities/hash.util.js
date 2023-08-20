@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import {SALT_ROUNDS} from '../config/hash.config.js';
+import { SALT_ROUNDS } from '../config/hash.config.js';
 
 const encryptPassword = (value) => {
     return bcrypt.hashSync(value, SALT_ROUNDS);

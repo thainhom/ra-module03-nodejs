@@ -1,5 +1,6 @@
-import userRepositories from "../repositories/user.repositories.js"
+import userRepository from "../repositories/user.repositories.js";
 import { comparePassword } from "../../utilities/hash.util.js";
+import { randomString } from "../../utilities/string.util.js";
 
 const login = (params, callback) => {
     const { username, password, type } = params;
@@ -12,7 +13,7 @@ const login = (params, callback) => {
         role = 2;
     }
 
-    userRepositories.getUserByUsernameAndRole(username, role, (error, result) => {
+    userRepository.getUserByUsernameAndRole(username, role, (error, result) => {
         if (error) {
             callback({
                 code: 500,
@@ -32,7 +33,9 @@ const login = (params, callback) => {
                     message: 'Sai mật khẩu'
                 }, null);
             } else {
-                userRepositories.createApiKey(user.user_id, (error, result) => {
+                const apiKey = user.user_id + randomString(128);
+
+                userRepository.createApiKey(user.user_id, apiKey, (error, result) => {
                     if (error) {
                         callback({
                             code: 500,
@@ -49,11 +52,36 @@ const login = (params, callback) => {
     });
 }
 
+const getAuth = (authId, callback) => {
+    userRepository.getDetailUser(authId, (error, result) => {
+        if (error) {
+            callback(error, null);
+        } else {
+            callback(null, result[0]);
+        }
+    })
+}
+
+const logout = (authId, callback) => {
+    userRepository.createApiKey(authId, null, (error, result) => {
+        if (error) {
+            callback({
+                code: 500,
+                message: error.message,
+            }, null);
+        } else {
+            callback(null, {});
+        }
+    });
+}
+
 const register = (params, callback) => {
     //
 }
 
 export default {
     login,
+    logout,
+    getAuth,
     register,
 }

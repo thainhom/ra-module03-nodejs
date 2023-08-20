@@ -1,4 +1,5 @@
 import getConnection from "../../config/connection.database.js"
+import moment from 'moment';
 const searchProduct = (params, callback) => {
     const connection = getConnection()
     let sql = ' FROM products';
@@ -11,13 +12,14 @@ const searchProduct = (params, callback) => {
         sql += ' WHERE name LIKE ?';
         bindParams.push(name)
     }
-    sql += ` LIMIT ${limit} OFFSET ${offset}`
-    connection.query('SELECT COUNT(1) AS total' + sql, bindParams, (error, countResult) => {
+    const countQuery = 'SELECT COUNT(1) AS total' + sql;
+    connection.query(countQuery, bindParams, (error, countResult) => {
         if (error) {
             callback(error, null);
 
         } else if (countResult[0].total !== 0) {
-            connection.query('SELECT *' + sql, bindParams, (error, result) => {
+            const selectColumnsQuery = 'SELECT *' + sql + ` LIMIT ${limit} OFFSET ${offset}`;
+            connection.query(selectColumnsQuery, bindParams, (error, result) => {
                 if (error) {
                     callback(error, null);
                 } else {
@@ -42,12 +44,10 @@ const addProduct = (product, callback) => {
     const connection = getConnection()
     const productTocreate = {
         ...product,
-        created_by_id: 1, // TODO: chờ làm login
         created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
-        updated_by_id: 1, // TODO: chờ làm login
         updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
     }
-    connection.query('INSERT INTO PRODUCTS SET ?', productTocreate, (error, result) => {
+    connection.query('INSERT INTO products SET ?', productTocreate, (error, result) => {
         if (error) {
             callback(error, null)
         } else {
@@ -69,8 +69,31 @@ const getDetailProduct = (id, callback) => {
     });
     connection.end()
 }
-const updateProduct = (request, response) => {
-
+const updateProduct = (product_id, params, callback) => {
+    const connection = getConnection();
+    let sql = 'UPDATE products SET sku = ?, name = ?, category = ?, unit_price = ?, description = ?, updated_by_id = ? ';
+    let bindParams = [
+        params.sku,
+        params.name,
+        params.category,
+        params.unit_price,
+        params.description,
+        params.updated_by_id
+    ]
+    if (params.image) {
+        sql + ', image = ?';
+        bindParams.push(params.image)
+    }
+    sql + ' WHERE product_id = ? '
+    bindParams.push(product_id);
+    connection.query(sql + bindParams, (error, result) => {
+        if (error) {
+            callback(error, null)
+        } else {
+            callback(null, result)
+        }
+    })
+    connection.end();
 }
 const deleteProduct = (id, callback) => {
     const connection = getConnection();

@@ -19,8 +19,22 @@ const searchProduct = (request, response) => {
 
 }
 const addProduct = (request, response) => {
+    if (request.auth.role !== 1) {
+        response.status(403)
+            .send({
+                error: 'Không có quyền truy cập.'
+            })
+
+        return;
+    }
     const requsetBody = request.body;
-    productServices.addProduct(requsetBody, (error, result) => {
+    const image = request.file;
+
+    productServices.addProduct({
+        ...requsetBody,
+        image: image,
+        authId: request.auth.user_id
+    }, (error, result) => {
         if (error) {
             response.status(500).send({
                 error: error,
@@ -44,9 +58,38 @@ const getDetailProduct = (request, response) => {
 
 }
 const updateProduct = (request, response) => {
+    if (request.auth.role !== 1) {
+        response.status(403)
+            .send({
+                error: 'Không có quyền truy cập.'
+            })
+
+        return;
+    }
+
+    const { id } = request.params;
+    const requestbody = request.body;
+
+    productServices.updateProduct(id, requestbody, (error, result) => {
+        if (error) {
+            response.status(500).send({
+                error: error
+            })
+        } else {
+            response.status(204).send()
+        }
+    })
 
 }
 const deleteProduct = (request, response) => {
+    if (request.auth.role !== 1) {
+        response.status(403)
+            .send({
+                error: 'Không có quyền truy cập.'
+            })
+
+        return;
+    }
     const { id } = request.params;
     productServices.deleteProduct(id, (error, result) => {
         if (error) {
