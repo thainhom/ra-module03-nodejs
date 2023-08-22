@@ -93,6 +93,7 @@ const updateUser = (request, response) => {
 
     userService.updateUser(userId, {
         ...requestBody,
+        authId: request.auth.user_id,
         avatar: avatar
     }, (error, result) => {
         if (error) {

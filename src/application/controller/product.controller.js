@@ -28,7 +28,7 @@ const addProduct = (request, response) => {
         return;
     }
     const requsetBody = request.body;
-    const image = request.file;
+    const image = request.files;
 
     productServices.addProduct({
         ...requsetBody,
@@ -70,7 +70,10 @@ const updateProduct = (request, response) => {
     const { id } = request.params;
     const requestbody = request.body;
 
-    productServices.updateProduct(id, requestbody, (error, result) => {
+    productServices.updateProduct(id, {
+        ...requestbody,
+        authId: request.auth.user_id,
+    }, (error, result) => {
         if (error) {
             response.status(500).send({
                 error: error

@@ -10,7 +10,7 @@ const searchOrder = (params, callback) => {
     const offset = (page - 1) * limit
     if (params.name) {
         const name = '%' + params.name + '%';
-        sql += ' WHERE serial_number AND total_price LIKE ?';
+        sql += ' WHERE serial_number OR total_price LIKE ?';
         bindParams.push(name)
     }
     const countQuery = 'SELECT COUNT(1) AS total' + sql;
@@ -40,8 +40,25 @@ const searchOrder = (params, callback) => {
         }
     });
 }
-const addOrder = (request, response) => {
-    /// Bỏ
+const addOrder = (order, callback) => {
+    const connection = getConnection();
+
+    const orderToCreate = {
+        ...order,
+        order_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+        created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+        updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+    }
+
+    connection.query('INSERT INTO orders SET ?', orderToCreate, (error, result) => {
+        if (error) {
+            callback(error, null);
+        } else {
+            callback(null, result);
+        }
+    });
+
+    connection.end();
 }
 const getDetailOrder = (id, callback) => {
     const connection = getConnection();
@@ -57,12 +74,13 @@ const getDetailOrder = (id, callback) => {
 }
 const updateOrder = (orderId, params, callback) => {
     const connection = getConnection();
-    let sql = 'UPDATE orders SET serial_number = ?, total_price = ?, status = ?, note = ?, updated_by_id = ?';
+    let sql = 'UPDATE orders SET serial_number = ?, total_price = ?, status = ?, note = ?,updated_at = ?, updated_by_id = ?';
     let bindParams = [
         params.serial_number,
         params.total_price,
         params.status,
         params.note,
+        params.updated_at,
         params.updated_by_id
     ]
     sql += ' WHERE order_id = ?'

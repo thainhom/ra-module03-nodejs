@@ -15,8 +15,53 @@ const searchOrder = (params, callback) => {
         });
     }
 }
-const addOrder = (request, response) => {
-    // không cần làm thêm order
+const addOrder = (requestBody, callback) => {
+    const validate = (params) => {
+        let error = new Map();
+        // validte serial_number
+        if (!params.serial_number) {
+            error.set('serial_number', "Mã sản phẩm không được bỏ trống")
+            // validate total_price
+        }
+        if (isNaN(params.total_price)) {
+            error.set('total_price', 'Giá tiền bắt buộc phải là số')
+            // validate status
+        }
+        if (!params.status) {
+            error.set('status', 'Trạng thái đơn hàng không được bỏ trống')
+        }
+        if (isNaN(params.status)) {
+            error.set('status', 'Trạng thái đang hàng đang bắt buộc phải là số ')
+        }
+        return error
+    }
+    const validateError = validate(requestBody)
+    if (validateError.size !== 0) {
+        callback(Object.fromEntries(validateError), null);
+    } else {
+
+
+        const newOrder = {
+            serial_number: requestBody.serial_number,
+            user_id: requestBody.authId,
+            total_price: requestBody.total_price,
+            status: requestBody.status,
+            note: requestBody.note,
+            created_by_id: requestBody.authId,
+            updated_by_id: requestBody.authId,
+
+        };
+        orderRepositories.addOrder(newOrder, (error, result) => {
+            if (error) {
+                callback(error, null);
+
+            } else {
+                callback(null, result);
+            }
+        })
+    }
+
+
 }
 const getDetailOrder = (id, callback) => {
     if (!(/^[0-9]+$/.test(id))) {
@@ -58,25 +103,25 @@ const updateOrder = (orderId, requestBody, callback) => {
     const validateError = validate(requestBody)
     if (validateError.size !== 0) {
         callback(Object.fromEntries(validateError), null);
-    } else {
-        const updateOrder = {
-            serial_number: requestBody.serial_number,
-            user_id: requestBody.authId,
-            total_price: requestBody.total_price,
-            status: requestBody.status,
-            note: requestBody.note,
-            update_at: moment().format('YYYY-MM-DD HH:mm:ss'),
-            updated_by_id: requestBody.authId,
-        };
-        orderRepositories.updateOrder(orderId, updateOrder, (error, result) => {
-            if (error) {
-                callback(error, null);
-
-            } else {
-                callback(null, result);
-            }
-        })
     }
+    const updateOrder = {
+        serial_number: requestBody.serial_number,
+        user_id: requestBody.authId,
+        total_price: requestBody.total_price,
+        status: requestBody.status,
+        note: requestBody.note,
+        updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+        updated_by_id: requestBody.authId,
+    };
+    orderRepositories.updateOrder(orderId, updateOrder, (error, result) => {
+        if (error) {
+            callback(error, null);
+
+        } else {
+            callback(null, result);
+        }
+    })
+
 
 }
 const deleteOrder = (id, callback) => {

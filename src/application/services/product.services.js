@@ -160,7 +160,7 @@ const updateProduct = (productId, updateData, callback) => {
             unit_price: updateData.unit_price,
             description: updateData.description,
             image: image,
-            update_by_id: updateData.authId,
+            updated_by_id: updateData.authId,
         }
         productRepositories.updateProduct(productId, updateProduct, (error, result) => {
             if (path) {

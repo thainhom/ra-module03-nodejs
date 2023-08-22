@@ -32,9 +32,9 @@ router.delete('/users/:id', userController.deleteUser);
 
 // product management
 router.get('/products', productController.searchProduct);
-router.post('/products', upload.single('image'), productController.addProduct);
+router.post('/products', upload.array('image'), productController.addProduct);
 router.get('/products/:id', productController.getDetailProduct);
-router.put('/products/:id', upload.single('image'), productController.updateProduct);
+router.put('/products/:id', upload.array('image'), productController.updateProduct);
 router.delete('/products/:id', productController.deleteProduct);
 
 // order management

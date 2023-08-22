@@ -24,7 +24,28 @@ const searchOrder = (request, response) => {
 
 }
 const addOrder = (request, response) => {
-    // admin không cần thêm oredr
+    if (request.auth.role !== 1) {
+        response.status(403)
+            .send({
+                error: 'Không có quyền truy cập.'
+            })
+
+        return;
+    }
+    const requestBody = request.body;
+    orderServices.addOrder({
+        ...requestBody,
+        authId: request.auth.user_id,
+    }, (error, result) => {
+        if (error) {
+            response.status(500).send({
+                error: error
+            })
+        } else {
+            response.status(200).send();
+        }
+    })
+
 }
 const getDetailOrder = (request, response) => {
     if (request.auth.role !== 1) {
@@ -61,7 +82,7 @@ const updateOrder = (request, response) => {
     const requestBody = request.body;
     orderServices.updateOrder(orderId, {
         ...requestBody,
-
+        authId: request.auth.user_id,
     }, (error, result) => {
         if (error) {
             response.status(500).send({

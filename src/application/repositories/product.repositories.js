@@ -81,12 +81,12 @@ const updateProduct = (product_id, params, callback) => {
         params.updated_by_id
     ]
     if (params.image) {
-        sql + ', image = ?';
+        sql += ', image = ?';
         bindParams.push(params.image)
     }
-    sql + ' WHERE product_id = ? '
+    sql += ' WHERE product_id = ? '
     bindParams.push(product_id);
-    connection.query(sql + bindParams, (error, result) => {
+    connection.query(sql, bindParams, (error, result) => {
         if (error) {
             callback(error, null)
         } else {
@@ -95,6 +95,7 @@ const updateProduct = (product_id, params, callback) => {
     })
     connection.end();
 }
+
 const deleteProduct = (id, callback) => {
     const connection = getConnection();
     connection.query('DELETE FROM products WHERE product_id = ?', [id], (error, result) => {
