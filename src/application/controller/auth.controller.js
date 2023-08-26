@@ -48,6 +48,24 @@ const logout = (request, response) => {
 }
 
 const register = (request, response) => {
+    const requestBody = request.body;
+
+    const params = {
+        ...requestBody
+
+    }
+    authService.register(params, (error, result) => {
+        if (error) {
+            console.log(error);
+            response.status(500)
+                .send({
+                    error: error,
+                });
+        } else {
+            response.send(result);
+        }
+    });
+
     //
 }
 

@@ -1,5 +1,5 @@
 import getConnection from '../../config/connection.database.js'
-
+import moment from 'moment';
 const searchContact = (params, callback) => {
     const connection = getConnection()
     let sql = ' FROM contacts';
@@ -72,7 +72,7 @@ const getDetailContact = (id, callback) => {
 }
 const updateContact = (contentId, params, callback) => {
     const connection = getConnection();
-    let sql = 'UPDATE contacts SET full_name = ?, email = ?,content = ?, status = ? updated_by_id = ? ';
+    let sql = 'UPDATE contacts SET full_name = ?, email = ?,content = ?, status = ?, updated_by_id = ? ';
     let bindParams = [
         params.full_name,
         params.email,

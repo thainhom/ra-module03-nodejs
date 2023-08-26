@@ -62,7 +62,7 @@ const addOrder = (order, callback) => {
 }
 const getDetailOrder = (id, callback) => {
     const connection = getConnection();
-    connection.query('SELECT * FROM orders ?', [id], (error, result) => {
+    connection.query('SELECT * FROM orders WHERE order_id = ?', [id], (error, result) => {
         if (error) {
             callback(error, null)
         } else {

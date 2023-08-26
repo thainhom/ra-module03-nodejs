@@ -2,6 +2,93 @@ import userRepository from "../repositories/user.repositories.js";
 import { comparePassword } from "../../utilities/hash.util.js";
 import { randomString } from "../../utilities/string.util.js";
 
+const checkExistUsername = (username) => {
+    return new Promise((resolve, reject) => {
+        userRepository.getUserByUsername(username, (error, result) => {
+            if (error) {
+                reject(error)
+            } else {
+                resolve(result);
+            }
+        });
+    });
+};
+const checkExistUserEmail = (email) => {
+    return new Promise((resolve, reject) => {
+        userRepository.getUserByEmail(email, (error, result) => {
+            if (error) {
+                reject(error)
+            } else {
+                resolve(result);
+            }
+        });
+    });
+};
+
+const register = async (params, callback) => {
+    const validate = async (params) => {
+        let errors = new Map();
+        // validate password
+        if (!params.password) {
+            errors.set('password', 'password không được để trống');
+        } else if (typeof params.password !== "string") {
+            errors.set('password', 'password phải là dạng chuỗi');
+        } else if (params.password.length < 8 || params.password.length > 20) {
+            errors.set('password', 'password phải ít nhất 8 ký tự và không quá 20 ký tự');
+        }
+        // validate username
+        if (!params.username) {
+            errors.set('username', 'Tên đăng nhập không được bỏ trống.');
+        } else if (typeof params.username !== 'string') {
+            errors.set('username', 'Tên đăng nhập phải là chuỗi.');
+        } else if (params.username.length < 4 || params.username.length > 10) {
+            errors.set('username', 'Tên đăng nhập chỉ cho phép 4 đến 10 ký tự.');
+        } else {
+            await checkExistUsername(params.username)
+                .then(result => {
+                    if (result.length !== 0) {
+                        errors.set('username', 'Tên đăng nhập đã tồn tại.');
+                    }
+                }).catch(error => {
+                    errors.set('username', error.message);
+                });
+        }
+        // Validate email
+        if (!params.email) {
+            errors.set('email', 'Email không được bỏ trống.');
+        } else if (typeof params.email !== 'string') {
+            errors.set('email', 'Email phải là chuỗi.');
+        } else if (params.email.length < 4 || params.email.length > 50) {
+            errors.set('email', 'Email chỉ cho phép 4 đến 50 ký tự.');
+        } else {
+            await checkExistUserEmail(params.email)
+                .then(result => {
+                    if (result.length !== 0) {
+                        errors.set('email', 'email đả tồn tại');
+                    }
+                }).catch(error => {
+                    errors.set('email', error.message);
+                });
+        }
+        return errors
+    }
+    const validateErrors = await validate(params)
+    if (validateErrors.size !== 0) {
+        callback(Object.fromEntries(validateErrors), null)
+    } else {
+        userRepository.register(params, (error, result) => {
+            if (error) {
+                callback(error, null)
+            } else {
+                callback(null, result)
+            }
+        })
+    }
+
+
+}
+
+
 const login = (params, callback) => {
     const { username, password, type } = params;
     // TODO: Validate
@@ -75,9 +162,7 @@ const logout = (authId, callback) => {
     });
 }
 
-const register = (params, callback) => {
-    //
-}
+
 
 export default {
     login,

@@ -18,21 +18,7 @@ const searchOrder = (params, callback) => {
 const addOrder = (requestBody, callback) => {
     const validate = (params) => {
         let error = new Map();
-        // validte serial_number
-        if (!params.serial_number) {
-            error.set('serial_number', "Mã sản phẩm không được bỏ trống")
-            // validate total_price
-        }
-        if (isNaN(params.total_price)) {
-            error.set('total_price', 'Giá tiền bắt buộc phải là số')
-            // validate status
-        }
-        if (!params.status) {
-            error.set('status', 'Trạng thái đơn hàng không được bỏ trống')
-        }
-        if (isNaN(params.status)) {
-            error.set('status', 'Trạng thái đang hàng đang bắt buộc phải là số ')
-        }
+
         return error
     }
     const validateError = validate(requestBody)
@@ -42,10 +28,10 @@ const addOrder = (requestBody, callback) => {
 
 
         const newOrder = {
-            serial_number: requestBody.serial_number,
+            serial_number: (new Date()).getTime(),
             user_id: requestBody.authId,
             total_price: requestBody.total_price,
-            status: requestBody.status,
+            status: 1,
             note: requestBody.note,
             created_by_id: requestBody.authId,
             updated_by_id: requestBody.authId,

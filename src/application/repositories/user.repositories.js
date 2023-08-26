@@ -2,6 +2,29 @@ import moment from 'moment';
 import getConnection from './../../config/connection.database.js';
 import { encryptPassword } from '../../utilities/hash.util.js';
 
+
+const register = (user, callback) => {
+    const connection = getConnection();
+    const userRegist = {
+        ...user,
+        role: 2,
+        password: encryptPassword(user.password),
+        created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+        updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+    }
+    connection.query('INSERT INTO users SET ?', userRegist, (error, result) => {
+        if (error) {
+            callback(error, null);
+        } else {
+            callback(null, result);
+        }
+    })
+    connection.end()
+}
+
+
+
+
 const searchUsers = (params, callback) => {
     const connection = getConnection();
 
@@ -220,6 +243,7 @@ const deleteUser = (id, callback) => {
 }
 
 export default {
+    register,
     searchUsers,
     addUser,
     getUserByUsername,
