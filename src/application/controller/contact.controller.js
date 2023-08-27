@@ -25,14 +25,7 @@ const searchContact = (request, response) => {
 
 }
 const addContact = (request, response) => {
-    if (request.auth.role !== 1) {
-        response.status(403)
-            .send({
-                error: 'Không có quyền truy cập.'
-            })
 
-        return;
-    }
 
     const requestBody = request.body;
 

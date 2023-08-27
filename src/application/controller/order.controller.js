@@ -24,14 +24,7 @@ const searchOrder = (request, response) => {
 
 }
 const addOrder = (request, response) => {
-    if (request.auth.role !== 1) {
-        response.status(403)
-            .send({
-                error: 'Không có quyền truy cập.'
-            })
 
-        return;
-    }
     const requestBody = request.body;
     orderServices.addOrder({
         ...requestBody,

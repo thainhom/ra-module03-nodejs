@@ -28,9 +28,7 @@ const addContact = (requestBody, callback) => {
         if (!params.content) {
             errors.set('content', 'Nội dung người liên hệ không được bỏ trông')
         }
-        if (!params.status) {
-            errors.set('status', 'Trạng thái không được bỏ trống')
-        }
+
         return errors
     }
 
@@ -43,7 +41,7 @@ const addContact = (requestBody, callback) => {
             full_name: requestBody.full_name,
             email: requestBody.email,
             content: requestBody.content,
-            status: requestBody.status,
+            status: 1,
             created_by_id: requestBody.authId,
             updated_by_id: requestBody.authId,
 
