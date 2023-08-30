@@ -2,6 +2,7 @@ import productRepositories from "../repositories/product.repositories.js";
 import { getFileExtension } from '../../utilities/upload.util.js';
 import fs from 'fs';
 const searchProduct = (params, callback) => {
+ 
     if (params.limit && !(/^[0-9]+$/.test(params.limit))) {
         callback({ message: 'limit phải là số' }, null)
     } else if (params.page && !(/^[0-9]+$/.test(params.page))) {

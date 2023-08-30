@@ -14,6 +14,7 @@ const searchOrder = (params, callback) => {
         bindParams.push(name)
     }
     const countQuery = 'SELECT COUNT(1) AS total' + sql;
+ 
 
     connection.query(countQuery, bindParams, (error, countResult) => {
         if (error) {

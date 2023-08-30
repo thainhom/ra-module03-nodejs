@@ -1,18 +1,15 @@
 import getConnection from "../../config/connection.database.js"
 import moment from 'moment';
 const searchProduct = (params, callback) => {
-    // let sort = null;
-    // if (type === ' ASC') {
-    //     sort = 1
-    // } else if (type === ' DESC') {
-    //     sort = 2
-    // }
     const connection = getConnection()
+    const { orderPrice } = params;
+    let orderby = ' ORDER BY `unit_price`';
+
+    if (orderPrice === 'DESC') {
+        orderby += ' DESC';
+    }
+
     let sql = ' FROM products';
-    let orderby = ' ORDER BY `unit_price` ';
-
-
-
 
     const bindParams = [];
 
@@ -31,7 +28,7 @@ const searchProduct = (params, callback) => {
             callback(error, null);
 
         } else if (countResult[0].total !== 0) {
-            const selectColumnsQuery = 'SELECT *' + sql + ` LIMIT ${limit} OFFSET ${offset}`;
+            const selectColumnsQuery = 'SELECT *' + sql + orderby + ` LIMIT ${limit} OFFSET ${offset}`;
             connection.query(selectColumnsQuery, bindParams, (error, result) => {
                 if (error) {
                     callback(error, null);
