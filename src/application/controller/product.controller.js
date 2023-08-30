@@ -1,10 +1,11 @@
 import productServices from './../services/product.services.js';
 const searchProduct = (request, response) => {
-    const { name, page, limit } = request.query;
+    const { name, page, limit, orderby } = request.query;
     productServices.searchProduct({
         name: name,
         page: page,
-        limit: limit
+        limit: limit,
+        orderby: orderby
     }, (error, result) => {
         if (error) {
             response.status(500).send({

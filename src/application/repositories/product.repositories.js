@@ -1,9 +1,21 @@
 import getConnection from "../../config/connection.database.js"
 import moment from 'moment';
 const searchProduct = (params, callback) => {
+    // let sort = null;
+    // if (type === ' ASC') {
+    //     sort = 1
+    // } else if (type === ' DESC') {
+    //     sort = 2
+    // }
     const connection = getConnection()
     let sql = ' FROM products';
+    let orderby = ' ORDER BY `unit_price` ';
+
+
+
+
     const bindParams = [];
+
     const page = params.page || 1;
     const limit = params.limit || 5
     const offset = (page - 1) * limit;
@@ -12,6 +24,7 @@ const searchProduct = (params, callback) => {
         sql += ' WHERE name LIKE ?';
         bindParams.push(name)
     }
+
     const countQuery = 'SELECT COUNT(1) AS total' + sql;
     connection.query(countQuery, bindParams, (error, countResult) => {
         if (error) {

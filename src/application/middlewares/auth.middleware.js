@@ -8,6 +8,7 @@ export default function (request, response, next) {
     if (
         (method === 'POST' && pathname === '/login')
         || (method === 'POST' && pathname === '/register')
+        || (method === 'GET' && pathname === '/products')
     ) {
         next();
     } else {
