@@ -2,24 +2,28 @@ import getConnection from "../../config/connection.database.js"
 import moment from 'moment';
 const searchProduct = (params, callback) => {
     const connection = getConnection()
-    const { orderPrice } = params;
+    const { orderPrice, categories } = params;
     let orderby = ' ORDER BY `unit_price`';
-
     if (orderPrice === 'DESC') {
         orderby += ' DESC';
     }
 
-    let sql = ' FROM products';
-
+    let sql = ' FROM products WHERE 1';
     const bindParams = [];
-
     const page = params.page || 1;
     const limit = params.limit || 5
     const offset = (page - 1) * limit;
     if (params.name) {
+
         const name = '%' + params.name + '%';
-        sql += ' WHERE name LIKE ?';
+        sql += ' AND name LIKE ?';
         bindParams.push(name)
+
+    }
+    if
+        (categories && categories.length > 0) {
+        sql += ' AND category IN (?)';
+        bindParams.push(categories)
     }
 
     const countQuery = 'SELECT COUNT(1) AS total' + sql;
@@ -50,6 +54,8 @@ const searchProduct = (params, callback) => {
     });
 
 }
+
+
 const addProduct = (product, callback) => {
     const connection = getConnection()
     const productTocreate = {
@@ -91,6 +97,7 @@ const updateProduct = (product_id, params, callback) => {
         params.updated_by_id
     ]
     if (params.image) {
+
         sql += ', image = ?';
         bindParams.push(params.image)
     }

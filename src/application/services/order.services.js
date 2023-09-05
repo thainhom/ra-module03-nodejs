@@ -70,9 +70,9 @@ const updateOrder = (orderId, requestBody, callback) => {
         let error = new Map();
         // validte serial_number
         if (!params.serial_number) {
-            error.set('serial_number', 'Mã sản phẩm không dược để trông')
-        } else if (params.serial_number.length < 4 || params.serial_number.length > 50) {
-            error.set('serial_number', "Mã sản phẩm ít nhất phải 4 ký tự và không quá 50 ký tự")
+            error.set('serial_number', 'Mã đơn hàng không dược để trông')
+        } else if (params.serial_number.length < 2 || params.serial_number.length > 50) {
+            error.set('serial_number', "Mã đơn hàng ít nhất phải 4 ký tự và không quá 50 ký tự")
             // validate total_price
         } if (!params.total_price) {
             error.set('total_price', 'Tổng giá tiền không được để trống')

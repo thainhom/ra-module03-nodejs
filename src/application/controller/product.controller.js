@@ -1,11 +1,12 @@
 import productServices from './../services/product.services.js';
 const searchProduct = (request, response) => {
-    const { name, page, limit, orderPrice } = request.query;
+    const { name, page, limit, orderPrice, categories } = request.query;
     productServices.searchProduct({
         name: name,
         page: page,
         limit: limit,
-        orderPrice: orderPrice
+        orderPrice: orderPrice,
+        categories: categories
     }, (error, result) => {
         if (error) {
             response.status(500).send({
@@ -29,7 +30,7 @@ const addProduct = (request, response) => {
         return;
     }
     const requsetBody = request.body;
-    const image = request.files;
+    const image = request.file;
 
     productServices.addProduct({
         ...requsetBody,

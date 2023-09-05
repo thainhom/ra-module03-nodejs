@@ -2,7 +2,6 @@ import productRepositories from "../repositories/product.repositories.js";
 import { getFileExtension } from '../../utilities/upload.util.js';
 import fs from 'fs';
 const searchProduct = (params, callback) => {
- 
     if (params.limit && !(/^[0-9]+$/.test(params.limit))) {
         callback({ message: 'limit phải là số' }, null)
     } else if (params.page && !(/^[0-9]+$/.test(params.page))) {
@@ -103,7 +102,7 @@ const getDetailProduct = (id, callback) => {
                 callback(error, null)
             } else if (result.length === 0) {
                 callback({
-                    message: 'user not found'
+                    message: ' sản phẩm không tồn tại'
                 }, null)
             }
             else {
