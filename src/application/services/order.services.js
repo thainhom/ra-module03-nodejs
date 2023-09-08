@@ -16,31 +16,45 @@ const searchOrder = (params, callback) => {
     }
 }
 const addOrder = (requestBody, callback) => {
+    const { cart, note, authId } = requestBody;
     const validate = (params) => {
         let error = new Map();
 
         return error
     }
-    const validateError = validate(requestBody)
+    const validateError = validate(cart)
     if (validateError.size !== 0) {
         callback(Object.fromEntries(validateError), null);
     } else {
+        let totalPrice = 0;
 
+        const orderDetails = cart.map((item, index) => {
+            const subTotalPrice = item.unit_price * item.quantity;
+            totalPrice += subTotalPrice;
 
+            return {
+                sequence_no: index + 1,
+                product_id: item.product_id,
+                sku: item.sku,
+                name: item.name,
+                unit_price: item.unit_price,
+                quantity: item.quantity,
+                sub_total_price: subTotalPrice
+            }
+        })
         const newOrder = {
             serial_number: (new Date()).getTime(),
             user_id: requestBody.authId,
-            total_price: requestBody.total_price,
+            total_price: totalPrice,
             status: 1,
             note: requestBody.note,
             created_by_id: requestBody.authId,
             updated_by_id: requestBody.authId,
-
         };
-        orderRepositories.addOrder(newOrder, (error, result) => {
+
+        orderRepositories.addOrder(newOrder, orderDetails, (error, result) => {
             if (error) {
                 callback(error, null);
-
             } else {
                 callback(null, result);
             }
@@ -53,13 +67,22 @@ const getDetailOrder = (id, callback) => {
     if (!(/^[0-9]+$/.test(id))) {
         callback({ message: 'ID phải là số' }, null)
     } else {
-        orderRepositories.getDetailOrder(id, (error, result) => {
+        orderRepositories.getDetailOrder(id, (error, orderResult) => {
             if (error) {
                 callback(error, null);
-            } else if (result.length === 0) {
+            } else if (orderResult.length === 0) {
                 callback({ message: 'User not found' }, null);
             } else {
-                callback(null, result[0]);
+                orderRepositories.getOrderDetailsByOrderId(id, (error, orderDetailResult) => {
+                    if (error) {
+                        callback(error, null);
+                    } else {
+                        const order = orderResult[0];
+                        order.order_details = orderDetailResult;
+
+                        callback(null, order);
+                    }
+                })
             }
         });
     }

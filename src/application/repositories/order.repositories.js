@@ -14,7 +14,7 @@ const searchOrder = (params, callback) => {
         bindParams.push(name)
     }
     const countQuery = 'SELECT COUNT(1) AS total' + sql;
- 
+
 
     connection.query(countQuery, bindParams, (error, countResult) => {
         if (error) {
@@ -41,29 +41,111 @@ const searchOrder = (params, callback) => {
         }
     });
 }
-const addOrder = (order, callback) => {
+const addOrder = (order, orderDetails, callback) => {
     const connection = getConnection();
 
-    const orderToCreate = {
-        ...order,
-        order_at: moment().format('YYYY-MM-DD HH:mm:ss'),
-        created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
-        updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+    const insertOrder = (order, orderDetails) => {
+        const orderToCreate = {
+            ...order,
+            order_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+            created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+            updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+        }
+
+        connection.query('INSERT INTO orders SET ?', orderToCreate, (error, result) => {
+            if (error) {
+                rollbackTransaction();
+                callback(error, null);
+            } else {
+                const orderId = result.insertId;
+                insertOrderDetails(orderId, orderDetails);
+            }
+        });
     }
 
-    connection.query('INSERT INTO orders SET ?', orderToCreate, (error, result) => {
-        if (error) {
-            callback(error, null);
-        } else {
-            callback(null, result);
-        }
-    });
+    const insertOrderDetails = (orderId, orderDetails) => {
+        const newOrderDetails = orderDetails.map(orderDetail => {
+            return [
+                orderId,
+                orderDetail.sequence_no,
+                orderDetail.product_id,
+                orderDetail.sku,
+                orderDetail.name,
+                orderDetail.unit_price,
+                orderDetail.quantity,
+                orderDetail.sub_total_price,
+            ]
+        });
 
-    connection.end();
+        connection.query(
+            'INSERT INTO order_details (order_id, sequence_no, product_id, sku, name, unit_price, quantity, sub_total_price) VALUES ?',
+            [newOrderDetails],
+            (error, result) => {
+                if (error) {
+                    rollbackTransaction();
+                    callback(error, null);
+                } else {
+                    commitTransaction();
+                    callback(null, result);
+                }
+            });
+    }
+
+    const startTransaction = (order, orderDetails) => {
+        connection.query('START TRANSACTION', (error, result) => {
+            if (error) {
+                connection.end();
+                callback(error, null);
+            } else {
+                insertOrder(order, orderDetails)
+            }
+        });
+    }
+
+    const rollbackTransaction = () => {
+        connection.query('ROLLBACK', (error, result) => {
+            if (error) {
+                callback(error, null);
+            }
+            connection.end();
+        });
+    }
+
+    const commitTransaction = () => {
+        connection.query('COMMIT', (error, result) => {
+            if (error) {
+                callback(error, null);
+            }
+            connection.end();
+        });
+    }
+
+    startTransaction(order, orderDetails);
 }
 const getDetailOrder = (id, callback) => {
     const connection = getConnection();
-    connection.query('SELECT * FROM orders WHERE order_id = ?', [id], (error, result) => {
+    connection.query(`
+    SELECT 
+        orders.*,
+        users.username,
+        users.first_name,
+        users.last_name
+    FROM orders 
+    LEFT JOIN users ON orders.user_id = users.user_id
+    WHERE orders.order_id = ?
+    `, [id], (error, result) => {
+        if (error) {
+            callback(error, null)
+        } else {
+            callback(null, result)
+        }
+    })
+    connection.end();
+
+}
+const getOrderDetailsByOrderId = (orderId, callback) => {
+    const connection = getConnection();
+    connection.query('SELECT * FROM order_details WHERE order_id = ?', [orderId], (error, result) => {
         if (error) {
             callback(error, null)
         } else {
@@ -114,7 +196,6 @@ export default {
     addOrder,
     getDetailOrder,
     updateOrder,
-    deleteOrder
-
-
+    deleteOrder,
+    getOrderDetailsByOrderId
 }
