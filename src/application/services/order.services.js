@@ -71,7 +71,7 @@ const getDetailOrder = (id, callback) => {
             if (error) {
                 callback(error, null);
             } else if (orderResult.length === 0) {
-                callback({ message: 'User not found' }, null);
+                callback({ message: 'Đơn hàng không tồn tại' }, null);
             } else {
                 orderRepositories.getOrderDetailsByOrderId(id, (error, orderDetailResult) => {
                     if (error) {

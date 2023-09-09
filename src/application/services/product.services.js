@@ -129,7 +129,7 @@ const updateProduct = (productId, updateData, callback) => {
             errors.name = 'tên sản phẩm không được để trống'
         }
         if (!params.category) {
-            errors.category = 'loại sản phẩm không được để trống'
+            errors.category = 'Phân loại sản phẩm không được để trống'
         }
         if (!params.unit_price) {
             errors.unit_price = 'giá tiền không được để trống'

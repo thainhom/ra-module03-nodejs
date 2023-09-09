@@ -41,14 +41,7 @@ const addOrder = (request, response) => {
 
 }
 const getDetailOrder = (request, response) => {
-    if (request.auth.role !== 1) {
-        response.status(403)
-            .send({
-                error: 'Không có quyền truy cập.'
-            })
 
-        return;
-    }
     const { id } = request.params;
     orderServices.getDetailOrder(id, (error, result) => {
         if (error) {
