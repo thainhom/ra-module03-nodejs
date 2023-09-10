@@ -191,11 +191,24 @@ const deleteOrder = (id, callback) => {
     connection.end();
 
 }
+const deleteOrderDetail = (orderDeatilId, callback) => {
+    const connection = getConnection()
+    connection.query('DELETE FROM order_details WHERE order_detail_id=?', [orderDeatilId], (error, result) => {
+        if (error) {
+            callback(error, null)
+        } else {
+            callback(null, result)
+        }
+    })
+    connection.end();
+}
+
 export default {
     searchOrder,
     addOrder,
     getDetailOrder,
     updateOrder,
     deleteOrder,
-    getOrderDetailsByOrderId
+    getOrderDetailsByOrderId,
+    deleteOrderDetail
 }

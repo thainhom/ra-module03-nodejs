@@ -43,6 +43,7 @@ router.post('/orders', orderController.addOrder);
 router.get('/orders/:id', orderController.getDetailOrder);
 router.put('/orders/:id', orderController.updateOrder);
 router.delete('/orders/:id', orderController.deleteOrder);
+router.delete('/order_details/:order_detail_id', orderController.deleteOrderDetail);
 
 // contact management
 router.get('/contacts', contactController.searchContact);

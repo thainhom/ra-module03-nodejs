@@ -41,6 +41,14 @@ const addOrder = (request, response) => {
 
 }
 const getDetailOrder = (request, response) => {
+    // if (request.auth.role !== 1) {
+    //     response.status(403)
+    //         .send({
+    //             error: 'Không có quyền truy cập.'
+    //         })
+
+    //     return;
+    // }
 
     const { id } = request.params;
     orderServices.getDetailOrder(id, (error, result) => {
@@ -101,12 +109,34 @@ const deleteOrder = (request, response) => {
     })
 
 }
+const deleteOrderDetail = (request, response) => {
+    if (request.auth.role !== 1) {
+        response.status(403)
+            .send({
+                error: 'Không có quyền truy cập.'
+            })
+
+        return;
+    }
+    const { order_detail_id } = request.params
+    orderServices.deleteOrderDetail(order_detail_id, (error, result) => {
+        if (error) {
+            response.status(500).send({
+                error: error.message
+            })
+        } else {
+            response.status(204).send();
+        }
+    })
+
+}
 export default {
     searchOrder,
     addOrder,
     getDetailOrder,
     updateOrder,
-    deleteOrder
+    deleteOrder,
+    deleteOrderDetail
 
 
 }

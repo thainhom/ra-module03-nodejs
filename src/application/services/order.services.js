@@ -154,12 +154,34 @@ const deleteOrder = (id, callback) => {
     }
 
 }
+const deleteOrderDetail = (order_detail_id, callback) => {
+    if (!(/^[0-9]+$/.test(order_detail_id))) {
+        callback({
+            message: 'Id phải là số'
+        }, null)
+    } else {
+        orderRepositories.deleteOrderDetail(order_detail_id, (error, result) => {
+            if (error) {
+                callback(error, null);
+            } else if (result.affectedRows === 0) {
+                callback({
+                    message: 'Đơn hàng không tồn tại'
+                })
+            } else {
+                callback(null, result)
+            }
+        })
+
+    }
+
+}
 export default {
     searchOrder,
     addOrder,
     getDetailOrder,
     updateOrder,
-    deleteOrder
+    deleteOrder,
+    deleteOrderDetail
 
 
 }
