@@ -13,6 +13,7 @@ app.use(cors());
 
 // Serving file
 // https://expressjs.com/en/starter/static-files.html
+// đê hiện thị file ảnh ...
 app.use(express.static('public'))
 
 // Cấu hình body parser
